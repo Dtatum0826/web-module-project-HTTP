@@ -3,10 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import axios from 'axios';
+import DeleteMovieModal from './DeleteMovieModal';
 
 const EditMovieForm = (props) => {
   const navigate = useNavigate();
 
+  const {id} = useParams()
+  const [movieid, setMovieId] = useState('')
   const { setMovies } = props;
   const [movie, setMovie] = useState({
     title: "",
@@ -15,6 +18,11 @@ const EditMovieForm = (props) => {
     metascore: 0,
     description: ""
   });
+
+
+ useEffect(()=>{
+setMovieId(id)
+},[id])
 
   const handleChange = (e) => {
     setMovie({
@@ -28,7 +36,7 @@ const EditMovieForm = (props) => {
     axios.put(`http://localhost:9000/api/movies/${id}`, movie)
       .then(res => {
         setMovies(res.data);
-        navigate(`/movies/${movie.id}`);
+        navigate(`/movies/${movieid}`);
       })
       .catch(err => {
         console.log(err);
@@ -69,9 +77,10 @@ const EditMovieForm = (props) => {
           </div>
           <div className="modal-footer">
             <input type="submit" className="btn btn-info" value="Save" />
-            <Link to={`/movies/1`}><input type="button" className="btn btn-default" value="Cancel" /></Link>
+            <Link to={`/movies/${movieid}`}><input type="button" className="btn btn-default" value="Cancel" /></Link>
           </div>
         </form>
+        
       </div>
     </div>);
 }
